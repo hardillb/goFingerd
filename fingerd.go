@@ -35,6 +35,7 @@ func main () {
 }
 
 func handleRequest(conn net.Conn) {
+  defer conn.Close()
   currentTime := time.Now()
   buf := make([]byte, 1024)
   reqLen, err := conn.Read(buf)
@@ -52,9 +53,12 @@ func handleRequest(conn net.Conn) {
   wide := false
   user := parts[0]
 
-  if parts[0] == "/W" {
+  if parts[0] == "/W" && len(parts) == 2 {
     wide = true
     user = parts[1]
+  } else if parts[0] == "/W" && len(parts) == 1 {
+    conn.Write([]byte("\r\n"))
+    return
   }
 
   if strings.Index(user, "@") != -1 {
@@ -79,7 +83,4 @@ func handleRequest(conn net.Conn) {
       }
     }
   }
-
-
-  conn.Close()
 }
