@@ -6,6 +6,7 @@ import (
   "fmt"
   "net"
   "path"
+  "time"
   "strings"
 )
 
@@ -34,8 +35,10 @@ func main () {
 }
 
 func handleRequest(conn net.Conn) {
+  currentTime := time.Now()
   buf := make([]byte, 1024)
   reqLen, err := conn.Read(buf)
+  fmt.Println(currentTime.Format(time.RFC3339))
   if err != nil {
     fmt.Println("Error reading from: ", err.Error())
   } else {
