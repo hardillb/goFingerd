@@ -46,7 +46,6 @@ func handleRequest(conn net.Conn) {
   fmt.Println(request)
 
   parts := strings.Split(request, " ")
-
   wide := false
   user := parts[0]
 
@@ -60,7 +59,7 @@ func handleRequest(conn net.Conn) {
     conn.Write([]byte("Forwarding not supported\r\n"))
   } else {
     if wide {
-      conn.Write([]byte("More FooBar\r\n"))
+      //TODO
     } else {
       pwd, err := os.Getwd()
       filePath := path.Join(pwd, "plans", path.Base(user + ".plan"))
@@ -69,11 +68,11 @@ func handleRequest(conn net.Conn) {
       file, err := os.Open(filePath)
       if err != nil {
         //not found
-	// io.Write([]byte("Not Found\r\n"))
+        // io.Write([]byte("Not Found\r\n"))
       } else {
         defer file.Close()
         io.Copy(conn,file)
-	conn.Write([]byte("\r\n"))
+        conn.Write([]byte("\r\n"))
       }
     }
   }
