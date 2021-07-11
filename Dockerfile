@@ -13,9 +13,6 @@ WORKDIR /root/
 COPY --from=builder /go/src/app/fingerd .
 COPY --from=builder /go/src/app/plans /root/plans/
 
-RUN ls -l /root/
-RUN echo $PWD
-
 EXPOSE 79
 
 CMD ["./fingerd"]
