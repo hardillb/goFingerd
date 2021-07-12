@@ -30,6 +30,11 @@ $ ./fingerd
 ### Docker
 
 ```bash
+$ docker build . -t fingerd
+```
+
+
+```bash
 $ docker run -d -v /path/to/plans:/root/plans -p 79:79 fingerd
 
 ```
