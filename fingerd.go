@@ -39,15 +39,14 @@ func handleRequest(conn net.Conn) {
   currentTime := time.Now()
   buf := make([]byte, 1024)
   reqLen, err := conn.Read(buf)
-  fmt.Println(currentTime.Format(time.RFC3339))
   if err != nil {
     fmt.Println("Error reading from: ", err.Error())
   } else {
-    fmt.Println("Connection from: ", conn.RemoteAddr())
+    // fmt.Println("Connection from: ", conn.RemoteAddr())
   }
 
   request := strings.TrimSpace(string(buf[:reqLen]))
-  fmt.Println(request)
+  fmt.Println(currentTime.Format(time.RFC3339), conn.RemoteAddr(), request)
 
   parts := strings.Split(request, " ")
   wide := false
@@ -62,7 +61,6 @@ func handleRequest(conn net.Conn) {
   }
 
   if strings.Index(user, "@") != -1 {
-    fmt.Println("remote")
     conn.Write([]byte("Forwarding not supported\r\n"))
   } else {
     if wide {
@@ -71,7 +69,6 @@ func handleRequest(conn net.Conn) {
       pwd, err := os.Getwd()
       filePath := path.Join(pwd, "plans", path.Base(user + ".plan"))
       filePath = path.Clean(filePath)
-      fmt.Println(filePath)
       file, err := os.Open(filePath)
       if err != nil {
         //not found
