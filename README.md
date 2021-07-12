@@ -26,3 +26,10 @@ This will grant the `fingerd` binary the ability to open port 79 as a normal use
 ```bash
 $ ./fingerd
 ```
+
+### Docker
+
+```bash
+$ docker run -d -v /path/to/plans:/root/plans -p 79:79 fingerd
+
+```
