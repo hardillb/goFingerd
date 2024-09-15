@@ -5,7 +5,7 @@ import (
   "os"
   "fmt"
   "net"
-  "path"
+  "path/filepath"
   "time"
   "strings"
 )
@@ -31,6 +31,12 @@ func main () {
       continue
     }
     go handleRequest(conn)
+  }
+}
+
+func check(err error) {
+  if err != nil {
+    panic(err)
   }
 }
 
@@ -67,16 +73,19 @@ func handleRequest(conn net.Conn) {
       //TODO
     } else {
       pwd, err := os.Getwd()
-      filePath := path.Join(pwd, "plans", path.Base(user + ".plan"))
-      filePath = path.Clean(filePath)
-      file, err := os.Open(filePath)
-      if err != nil {
-        //not found
-        // io.Write([]byte("Not Found\r\n"))
-      } else {
-        defer file.Close()
-        io.Copy(conn,file)
-        conn.Write([]byte("\r\n"))
+      filePath := filepath.Join(pwd, "plans", filepath.Base(user + ".plan"))
+      filePath, err = filepath.Abs(filePath)
+      check(err)
+      if filepath.Dir(filePath) == filepath.Join(pwd, "plans") {
+        file, err := os.Open(filePath)
+        if err != nil {
+          //not found
+          // io.Write([]byte("Not Found\r\n"))
+        } else {
+          defer file.Close()
+          io.Copy(conn,file)
+          conn.Write([]byte("\r\n"))
+        }
       }
     }
   }
