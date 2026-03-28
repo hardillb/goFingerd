@@ -66,11 +66,11 @@ func handleRequest(conn net.Conn) {
 		return
 	}
 
-	if strings.Index(user, "@") != -1 {
+	if strings.Contains(user, "@") {
 		conn.Write([]byte("Forwarding not supported\r\n"))
 	} else {
 		if wide {
-			//TODO
+			conn.Write([]byte("Wide mode not supported\r\n"))
 		} else if user == "" {
 			pwd, err := os.Getwd()
 			entries, err := os.ReadDir(filepath.Join(pwd, "plans"))
